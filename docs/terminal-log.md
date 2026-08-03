@@ -1,103 +1,175 @@
-# 터미널 조작 및 실행 환경 확인 로그
+# 터미널 조작 로그
 
-## 1. Linux 커널 및 시스템 정보 확인
+Linux CLI를 사용하여 현재 위치 확인, 파일 및 디렉토리 목록 확인, 디렉토리 이동, 파일과 디렉토리 생성, 파일 복사, 이름 변경, 이동, 내용 확인 및 삭제를 수행하였다.
 
-현재 실행 중인 Linux 커널, 호스트 이름, 시스템 구조를 확인하기 위해 `uname -a` 명령어를 실행하였다.
-
-### 입력
-
-```bash
-uname -a
-```
-
-### 출력
-
-```text
-Linux BOOK-5240G27HO6 6.18.33.2-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Thu Jun 18 21:54:43 UTC 2026 x86_64 GNU/Linux
-```
-
-### 확인 결과
-
-- Linux가 WSL2 환경에서 실행되고 있다.
-- 시스템 구조는 `x86_64`이다.
-- 사용 중인 커널은 Microsoft의 WSL2용 Linux 커널이다.
+명령어를 잘못 입력하거나 삭제 조건을 만족하지 못했을 때 발생한 오류도 함께 기록하고 원인을 분석하였다.
 
 ---
 
-## 2. Ubuntu 배포판 정보 확인
+## 1. 현재 위치 확인
 
-현재 사용 중인 Linux 배포판의 이름과 버전을 확인하기 위해 `/etc/os-release` 파일의 내용을 출력하였다.
+현재 터미널에서 작업 중인 디렉토리의 절대 경로를 확인하기 위해 `pwd` 명령어를 실행하였다.
 
 ### 입력
 
 ```bash
-cat /etc/os-release
+pwd
 ```
 
 ### 출력
 
 ```text
-PRETTY_NAME="Ubuntu 26.04 LTS"
-NAME="Ubuntu"
-VERSION_ID="26.04"
-VERSION="26.04 (Resolute Raccoon)"
-VERSION_CODENAME=resolute
-ID=ubuntu
-ID_LIKE=debian
-HOME_URL="https://www.ubuntu.com/"
-SUPPORT_URL="https://help.ubuntu.com/"
-BUG_REPORT_URL="https://bugs.launchpad.net/ubuntu/"
-PRIVACY_POLICY_URL="https://www.ubuntu.com/legal/terms-and-policies/privacy-policy"
-UBUNTU_CODENAME=resolute
-LOGO=ubuntu-logo
+/home/dldmswl/codyssey/E-1-Project
 ```
 
 ### 확인 결과
 
-- Linux 배포판은 Ubuntu이다.
-- 설치된 버전은 Ubuntu 26.04 LTS이다.
-- 배포판 코드명은 `Resolute Raccoon`이다.
+현재 작업 위치가 `E-1-Project` 저장소의 최상위 디렉토리임을 확인하였다.
 
 ---
 
-## 3. 기본 Shell 확인
+## 2. 파일 및 디렉토리 목록 확인
 
-현재 사용자 계정에 설정된 기본 Shell을 확인하기 위해 `SHELL` 환경 변수의 값을 출력하였다.
+현재 디렉토리에 있는 일반 파일과 디렉토리의 목록을 확인하기 위해 `ls` 명령어를 실행하였다.
 
 ### 입력
 
 ```bash
-echo $SHELL
+ls
 ```
 
 ### 출력
 
 ```text
-/bin/bash
+README.md  app  data  docs  practice
 ```
 
 ### 확인 결과
 
-현재 기본 Shell은 Bash이며 실행 경로는 `/bin/bash`이다.
+프로젝트 최상위 디렉토리에 다음 항목이 존재하였다.
+
+- `README.md`
+- `app`
+- `data`
+- `docs`
+- `practice`
 
 ---
 
-## 4. Git 버전 확인
+## 3. 숨김 파일을 포함한 상세 목록 확인
 
-현재 설치된 Git의 버전을 확인하여 Git 명령어를 사용할 수 있는 상태인지 점검하였다.
+숨김 파일, 권한, 소유자, 파일 크기 및 수정 시간을 확인하기 위해 `ls -la` 명령어를 실행하였다.
 
 ### 입력
 
 ```bash
-git --version
+ls -la
 ```
 
 ### 출력
 
 ```text
-git version 2.53.0
+total 40
+drwxr-xr-x 7 dldmswl dldmswl  4096 Aug  3 19:26 .
+drwxr-xr-x 5 dldmswl dldmswl  4096 Aug  3 19:15 ..
+drwxr-xr-x 7 dldmswl dldmswl  4096 Aug  3 21:37 .git
+-rw-r--r-- 1 dldmswl dldmswl 10855 Aug  3 21:46 README.md
+drwxr-xr-x 2 dldmswl dldmswl  4096 Aug  3 19:27 app
+drwxr-xr-x 2 dldmswl dldmswl  4096 Aug  3 19:27 data
+drwxr-xr-x 3 dldmswl dldmswl  4096 Aug  3 21:41 docs
+drwxr-xr-x 2 dldmswl dldmswl  4096 Aug  3 19:27 practice
 ```
 
 ### 확인 결과
 
-Git 2.53.0이 정상적으로 설치되어 있다.
+- `.git`은 이름이 `.`으로 시작하는 숨김 디렉토리이다.
+- `README.md`는 일반 파일이며 권한은 `-rw-r--r--`이다.
+- `app`, `data`, `docs`, `practice`는 디렉토리이며 권한은 `drwxr-xr-x`이다.
+- `ls -la`를 사용하면 일반적인 `ls`에서 보이지 않는 숨김 파일과 디렉토리도 확인할 수 있다.
+
+---
+
+## 4. 하위 디렉토리로 이동
+
+`practice` 디렉토리로 이동하기 위해 `cd` 명령어를 실행하였다.
+
+### 입력
+
+```bash
+cd practice
+```
+
+### 출력
+
+```text
+출력 없음
+```
+
+### 변경된 위치
+
+```text
+/home/dldmswl/codyssey/E-1-Project/practice
+```
+
+### 확인 결과
+
+`cd practice` 명령어를 사용하여 현재 디렉토리 아래의 `practice` 디렉토리로 이동하였다.
+
+---
+
+## 5. 상위 디렉토리로 이동
+
+현재 위치에서 한 단계 위의 디렉토리로 이동하기 위해 `cd ..` 명령어를 실행하였다.
+
+### 입력
+
+```bash
+cd ..
+```
+
+### 출력
+
+```text
+출력 없음
+```
+
+### 변경된 위치
+
+```text
+/home/dldmswl/codyssey/E-1-Project
+```
+
+### 확인 결과
+
+`..`은 현재 디렉토리의 상위 디렉토리를 의미한다.
+
+---
+
+## 6. 잘못 입력한 디렉토리 이동 명령어
+
+홈 디렉토리로 이동하려고 `cd~`를 입력했으나 명령어가 정상적으로 실행되지 않았다.
+
+### 잘못된 입력
+
+```bash
+cd~
+```
+
+### 출력
+
+```text
+Command 'cd~' not found, did you mean:
+  command 'cdi' from deb cdo (2.5.4-1)
+  command 'cdp' from deb irpas (0.10-10build1)
+  command 'cdo' from deb cdo (2.5.4-1)
+  command 'cdb' from deb tinycdb (0.81-2build1)
+  command 'cd5' from deb cd5 (0.1-4build1)
+  command 'cdw' from deb cdw (0.8.1-3build4)
+  command 'cde' from deb cde (0.1+git9-g551e54d-3)
+  command 'cdv' from deb erlang-observer (1:27.3.4.6+dfsg-1)
+Try: sudo apt install <deb name>
+```
+
+### 원인
+
+`cd`
