@@ -37,8 +37,9 @@ docker info
 
 자세한 출력 결과는 아래 문서에 기록한다.
 
-- [터미널 조작 로그](docs/environment-log.md)
-- [Docker 운영 및 검증 로그](docs/docker-log.md)
+- [터미널 조작 로그](docs/log/2_terminal.md)
+- [Docker 운영 및 검증 로그](E-1-Project/docs/log
+/2_docker.md)
 
 ---
 
@@ -154,7 +155,7 @@ Linux CLI를 사용하여 다음 작업을 수행하였다.
 
 ### 상세 기록
 
-[터미널 조작 로그 보기](docs/terminal-log.md)
+[터미널 조작 로그 보기](docs/log/4_1.md)
 
 ---
 
@@ -193,41 +194,8 @@ chmod
 
 ---
 
-## 4.3 Docker 설치 및 기본 점검
 
-Docker Desktop을 Windows에 설치하고 WSL2 Ubuntu와 연동하였다.
-
-### Docker 버전 확인
-
-```bash
-docker --version
-```
-
-실행 결과:
-
-```text
-Docker version 29.6.2, build dfc4efb
-```
-
-### Docker 엔진 상태 확인
-
-```bash
-docker info
-```
-
-실행 결과:
-
-```text
-작성 예정
-```
-
-### 상세 기록
-
-[Docker 운영 및 검증 로그 보기](docs/docker-log.md)
-
----
-
-## 4.4 Docker 이미지 관리
+## 4.3 Docker 이미지 관리
 
 Docker 이미지를 다운로드하고 이미지 목록을 확인한다.
 
@@ -252,7 +220,7 @@ docker images
 
 ---
 
-## 4.5 Docker 컨테이너 기본 운영
+## 4.4 Docker 컨테이너 기본 운영
 
 컨테이너를 실행하고 중지한 뒤 상태와 로그를 확인한다.
 
@@ -278,7 +246,7 @@ docker stats --no-stream
 
 ---
 
-## 4.6 hello-world 컨테이너 실행
+## 4.5 hello-world 컨테이너 실행
 
 Docker가 이미지를 다운로드하고 컨테이너를 정상적으로 실행할 수 있는지 확인한다.
 
@@ -298,7 +266,7 @@ docker run hello-world
 
 ---
 
-## 4.7 Ubuntu 컨테이너 실행
+## 4.6 Ubuntu 컨테이너 실행
 
 Ubuntu 컨테이너를 대화형 모드로 실행하고 컨테이너 내부에서 Linux 명령어를 실행한다.
 
@@ -327,7 +295,7 @@ cat /etc/os-release
 
 ---
 
-## 4.8 Dockerfile 기반 커스텀 이미지
+## 4.7 Dockerfile 기반 커스텀 이미지
 
 ### 선택한 방식
 
@@ -389,7 +357,7 @@ EXPOSE 80
 
 ---
 
-## 4.9 포트 매핑 및 웹 접속
+## 4.8 포트 매핑 및 웹 접속
 
 컨테이너 내부 웹 서버 포트를 호스트 포트와 연결하여 브라우저에서 접속한다.
 
@@ -438,7 +406,7 @@ http://localhost:8080
 
 ---
 
-## 4.10 바인드 마운트
+## 4.9 바인드 마운트
 
 호스트의 파일을 컨테이너 내부 경로와 연결하고, 호스트 파일 변경이 컨테이너에 즉시 반영되는지 확인한다.
 
@@ -466,7 +434,7 @@ http://localhost:8080
 
 ---
 
-## 4.11 Docker 볼륨 영속성
+## 4.10 Docker 볼륨 영속성
 
 Docker 볼륨을 생성하고 컨테이너에 연결한다.
 
@@ -502,7 +470,7 @@ Docker 볼륨을 생성하고 컨테이너에 연결한다.
 
 ---
 
-## 4.12 Git 설정 및 GitHub 연동
+## 4.1 Git 설정 및 GitHub 연동
 
 Git 사용자 정보를 설정하고 GitHub 원격 저장소와 연결하였다.
 
