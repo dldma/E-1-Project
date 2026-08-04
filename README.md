@@ -642,50 +642,119 @@ http://localhost:8080
 
 ## 4.8 포트 매핑 및 웹 접속
 
-컨테이너 내부 웹 서버 포트를 호스트 포트와 연결하여 브라우저에서 접속한다.
+커스텀 NGINX 컨테이너의 내부 80번 포트를 호스트의 8080번 포트와 연결하였다.
+
+`curl`과 Windows Chrome 브라우저를 사용하여 웹 서버 접속 및 HTTP 응답 상태를 확인하였다.
 
 ### 실행 명령어
 
 ```bash
-작성 예정
+docker run -d \
+  -p 127.0.0.1:8080:80 \
+  --name e1-nginx-container \
+  e1-nginx:1.0
 ```
 
-예상 명령어:
+기존에 생성한 컨테이너가 중지된 경우 다음 명령어로 다시 실행하였다.
 
 ```bash
-docker run -d \
-  -p 8080:80 \
-  --name e1-web-container \
-  e1-web:1.0
+docker start e1-nginx-container
+```
+
+### 포트 매핑 확인
+
+```bash
+docker ps
+```
+
+확인 결과는 다음과 같다.
+
+```text
+컨테이너 이름: e1-nginx-container
+컨테이너 ID: 9a0434d9b1ee
+이미지: e1-nginx:1.0
+실행 상태: Up
+포트 매핑: 127.0.0.1:8080 → 80/tcp
 ```
 
 ### 접속 주소
 
 ```text
-작성 예정
-```
-
-예상 접속 주소:
-
-```text
 http://localhost:8080
 ```
 
-### `curl` 확인 결과
+### curl 응답 확인
+
+HTTP 응답 헤더를 확인하였다.
 
 ```bash
-작성 예정
+curl -I http://localhost:8080
+```
+
+```text
+HTTP/1.1 200 OK
+Server: nginx/1.31.3
+Content-Type: text/html
+Content-Length: 884
+```
+
+`200 OK`가 출력되어 웹 서버가 요청을 정상적으로 처리하는 것을 확인하였다.
+
+HTML 본문도 확인하였다.
+
+```bash
+curl http://localhost:8080
+```
+
+직접 작성한 HTML 문서가 터미널에 정상적으로 출력되었다.
+
+```text
+Docker Web Server
+Dockerfile로 만든 NGINX 커스텀 이미지입니다.
+E-1 개발 환경 구축 프로젝트
 ```
 
 ### 브라우저 접속 결과
 
-작성 예정
+Windows Chrome 브라우저에서 `http://localhost:8080`으로 접속하였다.
+
+직접 작성한 웹페이지가 정상적으로 표시되어 포트 매핑과 NGINX 웹 서버가 정상적으로 작동하는 것을 확인하였다.
 
 ### 증거 이미지
 
-작성 예정
+![Docker 포트 매핑 및 웹 접속 화면](docs/screenshots/4_7-browser.png)
 
-[스크린샷 폴더 보기](docs/screenshots)
+### NGINX 로그 확인
+
+```bash
+docker logs --tail 20 e1-nginx-container
+```
+
+다음 요청과 응답 상태를 확인하였다.
+
+```text
+HEAD / HTTP/1.1 → 200
+GET / HTTP/1.1 → 200
+Chrome GET / HTTP/1.1 → 304
+```
+
+`200`은 요청이 정상 처리되었다는 뜻이며, `304`는 페이지가 변경되지 않아 브라우저 캐시를 사용했다는 뜻이다.
+
+### 수행 결과
+
+- [x] NGINX 컨테이너 실행
+- [x] 호스트 포트와 컨테이너 포트 연결
+- [x] 포트 매핑 상태 확인
+- [x] `curl -I` 응답 확인
+- [x] HTTP 상태 코드 `200 OK` 확인
+- [x] `curl` HTML 본문 확인
+- [x] Windows 브라우저 접속 확인
+- [x] NGINX 접속 로그 확인
+- [x] 증거 이미지 첨부
+
+### 상세 기록
+
+[포트 매핑 및 웹 접속 로그 보기](docs/log/4_8.md)
 
 ---
 
