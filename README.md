@@ -81,13 +81,13 @@ docker info
 
 ### Dockerfile 및 웹 서버
 
-- [ ] Dockerfile 작성
-- [ ] 웹 서버 소스코드 작성
-- [ ] 커스텀 이미지 빌드
-- [ ] 커스텀 컨테이너 실행
-- [ ] 포트 매핑 적용
-- [ ] 브라우저 접속 확인
-- [ ] `curl` 응답 확인
+- [x] Dockerfile 작성
+- [x] 웹 서버 소스코드 작성
+- [x] 커스텀 이미지 빌드
+- [x] 커스텀 컨테이너 실행
+- [x] 포트 매핑 적용
+- [x] 브라우저 접속 확인
+- [x] `curl` 응답 확인
 - [ ] 바인드 마운트 변경 반영 확인
 - [ ] Docker 볼륨 생성
 - [ ] Docker 볼륨 영속성 검증
@@ -517,31 +517,21 @@ docker exec -it ubuntu-shell bash
 
 ## 4.7 Dockerfile 기반 커스텀 이미지
 
+NGINX Alpine 이미지를 베이스 이미지로 사용하고, 직접 작성한 HTML 파일을 포함하는 커스텀 Docker 이미지를 제작하였다.
+
 ### 선택한 방식
 
-작성 예정
+NGINX Alpine 베이스 이미지에 정적 HTML 파일을 복사하여 간단한 웹 서버를 구성하였다.
 
-예상 방식:
-
-```text
-NGINX Alpine 베이스 이미지와 정적 HTML 파일을 사용한 웹 서버
-```
+Alpine 기반 이미지를 선택하여 비교적 가벼운 크기의 웹 서버 이미지를 제작하였다.
 
 ### 선택한 베이스 이미지
-
-작성 예정
-
-예상 베이스 이미지:
 
 ```text
 nginx:alpine
 ```
 
 ### Dockerfile
-
-작성 예정
-
-예상 구조:
 
 ```dockerfile
 FROM nginx:alpine
@@ -551,29 +541,102 @@ COPY app/ /usr/share/nginx/html/
 EXPOSE 80
 ```
 
-### 커스텀 포인트
+- `FROM`: NGINX Alpine 이미지를 베이스 이미지로 사용
+- `COPY`: `app` 폴더의 웹페이지 파일을 NGINX 기본 웹 경로로 복사
+- `EXPOSE`: 컨테이너 내부의 80번 포트 사용을 표시
 
-작성 예정
+### 웹 서버 소스코드
+
+```text
+app/index.html
+```
+
+웹페이지에는 다음 내용을 작성하였다.
+
+```text
+Docker Web Server
+Dockerfile로 만든 NGINX 커스텀 이미지입니다.
+E-1 개발 환경 구축 프로젝트
+```
 
 ### 이미지 빌드 명령어
 
 ```bash
-작성 예정
+docker build -t e1-nginx:1.0 .
+```
+
+### 이미지 빌드 결과
+
+```text
+이미지 이름과 태그: e1-nginx:1.0
+이미지 ID: 9546c3e213ce
+디스크 사용량: 92.7MB
+콘텐츠 크기: 26.1MB
+빌드 상태: FINISHED
 ```
 
 ### 컨테이너 실행 명령어
 
 ```bash
-작성 예정
+docker run -d --name e1-nginx-container -p 127.0.0.1:8080:80 e1-nginx:1.0
 ```
 
-### 실행 결과
+### 컨테이너 실행 결과
 
-작성 예정
+```text
+컨테이너 이름: e1-nginx-container
+컨테이너 ID: 9a0434d9b1ee
+사용 이미지: e1-nginx:1.0
+실행 상태: Up
+포트 매핑: 127.0.0.1:8080 → 80/tcp
+```
+
+### curl 응답 확인
+
+```bash
+curl http://localhost:8080
+```
+
+작성한 HTML 문서가 터미널에 정상적으로 출력되었다.
+
+```text
+Docker Web Server
+Dockerfile로 만든 NGINX 커스텀 이미지입니다.
+E-1 개발 환경 구축 프로젝트
+```
+
+### 브라우저 실행 화면
+
+![Docker 커스텀 웹 서버 실행 화면](docs/screenshots/4_7-browser.png)
+
+Windows Chrome 브라우저에서 다음 주소로 접속하였다.
+
+```text
+http://localhost:8080
+```
+
+직접 작성한 웹페이지가 정상적으로 표시되어 커스텀 Docker 이미지, NGINX 서버 및 포트 매핑이 정상적으로 작동하는 것을 확인하였다.
+
+<!-- 스크린샷을 저장한 뒤 아래 주석을 제거한다.
+![Docker 커스텀 웹 서버 실행 화면](docs/screenshots/4_7-browser.png)
+-->
+
+### 수행 결과
+
+- [x] NGINX Alpine 베이스 이미지 선택
+- [x] 웹 서버 HTML 파일 작성
+- [x] Dockerfile 작성
+- [x] 커스텀 이미지 빌드
+- [x] 커스텀 이미지 목록 확인
+- [x] 커스텀 컨테이너 실행
+- [x] 포트 매핑 적용
+- [x] `curl` 응답 확인
+- [x] 웹 브라우저 접속 확인
+- [x] 직접 작성한 웹페이지 표시 확인
 
 ### 상세 기록
 
-[Docker 운영 및 검증 로그 보기](docs/docker-log.md)
+[Dockerfile 기반 커스텀 이미지 로그 보기](docs/log/4_7.md)
 
 ---
 
