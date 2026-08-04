@@ -69,12 +69,12 @@ docker info
 - [x] Docker 엔진 상태 확인
 - [x] Docker 이미지 다운로드
 - [x] Docker 이미지 목록 확인
-- [ ] 컨테이너 실행
-- [ ] 컨테이너 중지 및 재실행
-- [ ] 실행 중인 컨테이너 목록 확인
-- [ ] 전체 컨테이너 목록 확인
-- [ ] 컨테이너 로그 확인
-- [ ] 컨테이너 리소스 사용량 확인
+- [x] 컨테이너 실행
+- [x] 컨테이너 중지 및 재실행
+- [x] 실행 중인 컨테이너 목록 확인
+- [x] 전체 컨테이너 목록 확인
+- [x] 컨테이너 로그 확인
+- [x] 컨테이너 리소스 사용량 확인
 - [ ] `hello-world` 컨테이너 실행
 - [ ] Ubuntu 컨테이너 실행 및 내부 진입
 - [ ] `attach`와 `exec` 차이 확인
@@ -263,27 +263,69 @@ Docker Hub에서 `ubuntu:24.04` 이미지를 정상적으로 다운로드하였�
 
 ## 4.4 Docker 컨테이너 기본 운영
 
-컨테이너를 실행하고 중지한 뒤 상태와 로그를 확인한다.
+`ubuntu:24.04` 이미지로 컨테이너를 생성하고 실행 상태, 로그 및 자원 사용량을 확인하였다.
+
+컨테이너를 중지한 뒤 다시 시작하여 Docker 컨테이너의 기본 운영 방법을 실습하였다.
 
 ### 실행 명령어
 
 ```bash
-docker run 이미지명
+docker run -d --name ubuntu-practice ubuntu:24.04 sh -c 'while true; do echo "Ubuntu container is running"; sleep 10; done'
 docker ps
 docker ps -a
-docker stop 컨테이너명
-docker start 컨테이너명
-docker logs 컨테이너명
-docker stats --no-stream
+docker logs ubuntu-practice
+docker stats ubuntu-practice --no-stream
+docker stop ubuntu-practice
+docker start ubuntu-practice
+docker logs --tail 5 ubuntu-practice
 ```
 
 ### 실행 결과
 
-작성 예정
+`ubuntu:24.04` 이미지로 `ubuntu-practice` 컨테이너를 정상적으로 생성하고 백그라운드에서 실행하였다.
+
+```text
+컨테이너 이름: ubuntu-practice
+컨테이너 ID: a1aa86e1ecfd
+사용 이미지: ubuntu:24.04
+실행 상태: Up
+```
+
+`docker logs`를 통해 컨테이너 내부에서 다음 문자열이 약 10초마다 출력되는 것을 확인하였다.
+
+```text
+Ubuntu container is running
+```
+
+`docker stats`를 사용하여 컨테이너의 자원 사용량도 확인하였다.
+
+```text
+CPU 사용률: 0.00%
+메모리 사용량: 3.328MiB / 15.37GiB
+메모리 사용률: 0.02%
+실행 프로세스 수: 2
+```
+
+컨테이너를 중지한 뒤 `docker ps`에서는 표시되지 않고, `docker ps -a`에서는 `Exited` 상태로 표시되는 것을 확인하였다.
+
+이후 `docker start ubuntu-practice` 명령어로 기존 컨테이너를 다시 실행하고 최근 로그 5줄을 확인하였다.
+
+실습 종료 후 컨테이너는 다시 중지하였다.
+
+### 수행 결과
+
+- [x] 컨테이너 생성 및 실행
+- [x] 실행 중인 컨테이너 확인
+- [x] 전체 컨테이너 확인
+- [x] 컨테이너 로그 확인
+- [x] 컨테이너 자원 사용량 확인
+- [x] 컨테이너 중지
+- [x] 중지된 컨테이너 재시작
+- [x] 실습 종료 후 컨테이너 중지
 
 ### 상세 기록
 
-[Docker 운영 및 검증 로그 보기](docs/docker-log.md)
+[Docker 컨테이너 기본 운영 로그 보기](docs/log/4_4.md)
 
 ---
 
