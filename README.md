@@ -38,8 +38,7 @@ docker info
 자세한 출력 결과는 아래 문서에 기록한다.
 
 - [터미널 조작 로그](docs/log/2_terminal.md)
-- [Docker 운영 및 검증 로그](E-1-Project/docs/log
-/2_docker.md)
+- [Docker 운영 및 검증 로그](/docs/log/2_docker.md)
 
 ---
 
