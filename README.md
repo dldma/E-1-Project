@@ -67,8 +67,8 @@ docker info
 - [x] WSL2와 Docker Desktop 연동
 - [x] Docker 버전 확인
 - [x] Docker 엔진 상태 확인
-- [ ] Docker 이미지 다운로드
-- [ ] Docker 이미지 목록 확인
+- [x] Docker 이미지 다운로드
+- [x] Docker 이미지 목록 확인
 - [ ] 컨테이너 실행
 - [ ] 컨테이너 중지 및 재실행
 - [ ] 실행 중인 컨테이너 목록 확인
@@ -238,15 +238,26 @@ docker images
 
 ### 사용한 이미지
 
-작성 예정
+```text
+ubuntu:24.04
+```
 
 ### 실행 결과
 
-작성 예정
+Docker Hub에서 `ubuntu:24.04` 이미지를 정상적으로 다운로드하였다.
+
+```text
+이미지 이름 및 태그: ubuntu:24.04
+이미지 ID: 561618e2c15b
+디스크 사용량: 119MB
+콘텐츠 크기: 31.7MB
+```
+
+`docker images` 명령어를 통해 이미지가 로컬 Docker 환경에 정상적으로 저장된 것을 확인하였다.
 
 ### 상세 기록
 
-[Docker 운영 및 검증 로그 보기](docs/docker-log.md)
+[Docker 이미지 관리 로그 보기](docs/log/4_3.md)
 
 ---
 
