@@ -1187,78 +1187,176 @@ working tree clean 상태
 
 ---
 
-## 5. 트러블슈팅
+# 5. 트러블슈팅
 
-실습 중 발생한 문제의 원인과 해결 과정을 기록한다.
+실습 중 발생한 문제의 원인과 해결 과정을 기록하였다.
 
-### 트러블슈팅 1
+## 트러블슈팅 1: Git 저장소 인식 오류
 
-작성 예정
+Git 저장소가 아닌 `~/codyssey` 디렉토리에서 `git add .`을 실행하여 다음 오류가 발생하였다.
 
-### 트러블슈팅 2
+```text
+fatal: not a git repository (or any of the parent directories): .git
+```
 
-작성 예정
+실제 저장소인 `E-1-Project` 디렉토리로 이동하여 해결하였다.
 
-자세한 내용은 아래 문서에서 확인한다.
+```bash
+cd ~/codyssey/E-1-Project
+git status
+git add .
+```
 
-[트러블슈팅 기록 보기](docs/troubleshooting.md)
+## 트러블슈팅 2: 중지된 컨테이너에서 exec 실행
+
+중지된 `ubuntu-shell` 컨테이너에서 `docker exec`를 실행하여 다음 오류가 발생하였다.
+
+```text
+Error response from daemon: container ... is not running
+```
+
+컨테이너를 먼저 실행한 뒤 `docker exec`를 다시 사용하여 해결하였다.
+
+```bash
+docker start ubuntu-shell
+docker ps
+docker exec -it ubuntu-shell bash
+```
+
+`docker exec`는 실행 중인 컨테이너에서만 사용할 수 있음을 확인하였다.
+
+자세한 오류와 해결 과정은 아래 문서에 기록하였다.
+
+[트러블슈팅 기록 보기](docs/log/5_troubleshooting.md)
 
 ---
 
-## 6. 저장소 구조
+# 6. 저장소 구조
 
 ```text
 E-1-Project/
 ├── README.md
-├── Dockerfile                 # 작성 예정
+├── Dockerfile
 ├── app/
-│   └── index.html             # 작성 예정
-├── data/
+│   └── index.html
+├── bind-mount/
+│   └── html/
+│       └── index.html
+├── cli-practice/
+├── parent/
+│   └── child/
 ├── practice/
+│   └── permission-practice/
+│       ├── permission-dir/
+│       └── permission-file.txt
 └── docs/
-    ├── terminal-log.md
-    ├── docker-log.md
-    ├── troubleshooting.md
+    ├── log/
+    │   ├── 2_docker.md
+    │   ├── 2_terminal.md
+    │   ├── 4_1.md
+    │   ├── 4_2.md
+    │   ├── 4_3.md
+    │   ├── 4_4.md
+    │   ├── 4_5.md
+    │   ├── 4_6.md
+    │   ├── 4_7.md
+    │   ├── 4_8.md
+    │   ├── 4_9.md
+    │   ├── 4_10.md
+    │   ├── 4_11.md
+    │   └── 5_troubleshooting.md
     └── screenshots/
+        ├── .gitkeep
+        ├── 4_7-browser.png
+        ├── 4_9.png
+        ├── 4_9_2.png
+        ├── 4_11.png
+        └── 4_11_2.png
 ```
 
-### 폴더별 용도
+## 폴더 및 파일 용도
 
 | 경로 | 용도 |
 |---|---|
-| `README.md` | 프로젝트 전체 기술 문서 |
-| `Dockerfile` | Docker 커스텀 이미지 제작 설정 |
-| `app/` | 웹 서버 소스코드 |
-| `data/` | 데이터 및 볼륨 관련 실습 자료 |
-| `practice/` | 터미널 및 권한 실습 |
-| `docs/terminal-log.md` | 터미널 명령어와 출력 결과 |
-| `docs/docker-log.md` | Docker 명령어와 출력 결과 |
-| `docs/troubleshooting.md` | 문제 발생 및 해결 기록 |
-| `docs/screenshots/` | 터미널 및 브라우저 증거 이미지 |
+| `README.md` | 프로젝트 전체 실습 과정과 결과 정리 |
+| `Dockerfile` | NGINX 기반 커스텀 Docker 이미지 제작 설정 |
+| `app/index.html` | 커스텀 이미지에 포함되는 웹페이지 소스코드 |
+| `bind-mount/html/index.html` | 바인드 마운트 변경 반영 실습용 웹페이지 |
+| `cli-practice/` | Linux 터미널 기본 명령어 실습 디렉토리 |
+| `parent/child/` | 중첩 디렉토리 생성 실습 결과 |
+| `practice/permission-practice/` | 파일 및 디렉토리 권한 변경 실습 자료 |
+| `docs/log/` | 항목별 명령어, 실행 결과 및 결과 설명 |
+| `docs/screenshots/` | 브라우저와 터미널 실행 결과 증거 이미지 |
 
 ---
 
-## 7. 문서 및 결과 링크
+# 7. 문서 및 결과 링크
 
-- [터미널 조작 로그](docs/terminal-log.md)
-- [Docker 운영 및 검증 로그](docs/docker-log.md)
-- [트러블슈팅 기록](docs/troubleshooting.md)
-- [스크린샷 폴더](docs/screenshots)
+## 실행 환경 및 터미널
+
+- [Linux 및 Git 실행 환경 확인](docs/log/2_terminal.md)
+- [Docker 설치 및 엔진 상태 확인](docs/log/2_docker.md)
+- [터미널 기본 조작 실습](docs/log/4_1.md)
+- [파일 및 디렉토리 권한 실습](docs/log/4_2.md)
+
+## Docker 이미지 및 컨테이너
+
+- [Docker 이미지 관리](docs/log/4_3.md)
+- [Docker 컨테이너 기본 운영](docs/log/4_4.md)
+- [hello-world 컨테이너 실행](docs/log/4_5.md)
+- [Ubuntu 컨테이너 실행 및 내부 진입](docs/log/4_6.md)
+
+## Dockerfile 및 웹 서버
+
+- [Dockerfile 기반 커스텀 이미지](docs/log/4_7.md)
+- [포트 매핑 및 웹 접속](docs/log/4_8.md)
+- [바인드 마운트](docs/log/4_9.md)
+- [Docker 볼륨 영속성](docs/log/4_10.md)
+
+## Git 및 문제 해결
+
+- [Git 설정 및 GitHub 연동](docs/log/4_11.md)
+- [트러블슈팅 기록](docs/log/5_troubleshooting.md)
+
+## 증거 자료
+
+- [스크린샷 폴더](docs/screenshots/)
 
 ---
 
-## 8. 보안 및 개인정보 보호
+# 8. 보안 및 개인정보 보호
+
+공개 GitHub 저장소에 인증 정보와 개인정보가 포함되지 않도록 다음 원칙을 적용하였다.
 
 - GitHub Personal Access Token은 저장소에 기록하지 않는다.
 - GitHub 및 Ubuntu 비밀번호는 문서에 기록하지 않는다.
 - 개인키와 인증 코드는 Git에 추가하지 않는다.
-- 민감정보가 포함된 화면은 캡처하지 않거나 마스킹한다.
-- GitHub에 Push하기 전에 문서와 스크린샷의 민감정보를 확인한다.
+- 민감정보가 포함된 화면은 캡처하지 않거나 필요한 부분을 가린다.
+- GitHub에 Push하기 전에 문서와 소스코드의 민감정보 포함 여부를 확인한다.
+- 공개 로그에는 개인 이메일 주소 전체를 표시하지 않는다.
+- 원격 저장소 주소에 토큰이나 비밀번호를 포함하지 않는다.
 
-### 보안 점검 체크리스트
+## 보안 점검 명령어
 
-- [ ] README에 토큰이 포함되지 않았는지 확인
-- [ ] 터미널 로그에 비밀번호가 포함되지 않았는지 확인
-- [ ] 스크린샷에 인증 정보가 노출되지 않았는지 확인
-- [ ] 개인키가 Git에 추가되지 않았는지 확인
-- [ ] Push 전 전체 파일
+```bash
+git grep -nEi 'ghp_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+|AKIA[0-9A-Z]{16}|-----BEGIN .*PRIVATE KEY-----'
+git grep -nEi 'password\s*=|passwd\s*=|secret\s*=|api[_-]?key\s*='
+git remote -v
+git status
+```
+
+## 보안 점검 결과
+
+- [x] README에 토큰이 포함되지 않았는지 확인
+- [x] 터미널 로그에 비밀번호가 포함되지 않았는지 확인
+- [x] 스크린샷에 인증 정보가 노출되지 않았는지 확인
+- [x] 개인키 및 인증 코드가 포함되지 않았는지 확인
+- [x] 원격 저장소 URL에 인증 정보가 포함되지 않았는지 확인
+- [x] 공개 문서의 개인 이메일 일부 가림
+- [x] Push 전 전체 파일 최종 확인
+
+GitHub 원격 저장소 주소는 일반 HTTPS 형식으로 설정되어 있으며 토큰이나 비밀번호가 포함되지 않았다.
+
+```text
+https://github.com/dldma/E-1-Project.git
+```
