@@ -75,7 +75,7 @@ docker info
 - [x] 전체 컨테이너 목록 확인
 - [x] 컨테이너 로그 확인
 - [x] 컨테이너 리소스 사용량 확인
-- [ ] `hello-world` 컨테이너 실행
+- [x] `hello-world` 컨테이너 실행
 - [ ] Ubuntu 컨테이너 실행 및 내부 진입
 - [ ] `attach`와 `exec` 차이 확인
 
@@ -331,21 +331,66 @@ CPU 사용률: 0.00%
 
 ## 4.5 hello-world 컨테이너 실행
 
-Docker가 이미지를 다운로드하고 컨테이너를 정상적으로 실행할 수 있는지 확인한다.
+Docker가 이미지를 내려받고 컨테이너를 정상적으로 생성하고 실행할 수 있는지 확인하기 위해 `hello-world` 이미지를 실행하였다.
 
 ### 실행 명령어
 
 ```bash
 docker run hello-world
+docker ps -a
 ```
 
 ### 실행 결과
 
-작성 예정
+로컬 환경에 `hello-world:latest` 이미지가 없었기 때문에 Docker Hub에서 이미지가 자동으로 다운로드되었다.
+
+```text
+Status: Downloaded newer image for hello-world:latest
+```
+
+이미지 다운로드 후 다음 문구가 정상적으로 출력되었다.
+
+```text
+Hello from Docker!
+This message shows that your installation appears to be working correctly.
+```
+
+이를 통해 다음 과정이 정상적으로 수행된 것을 확인하였다.
+
+```text
+Docker 클라이언트와 Docker 데몬 연결
+Docker Hub에서 이미지 다운로드
+hello-world 컨테이너 생성
+컨테이너 내부 프로그램 실행
+결과를 터미널에 출력
+```
 
 ### 검증 결과
 
-작성 예정
+`docker ps -a` 명령어를 사용하여 컨테이너의 종료 상태를 확인하였다.
+
+```text
+컨테이너 ID: 65d11b3ee6a6
+사용 이미지: hello-world
+컨테이너 이름: vigorous_brahmagupta
+종료 상태: Exited (0)
+```
+
+`hello-world` 컨테이너는 안내 문구를 출력한 뒤 자동으로 종료된다.
+
+`Exited (0)`은 컨테이너 내부의 프로그램이 오류 없이 정상적으로 작업을 완료했다는 뜻이다.
+
+### 수행 결과
+
+- [x] hello-world 이미지 다운로드
+- [x] hello-world 컨테이너 생성 및 실행
+- [x] `Hello from Docker!` 출력 확인
+- [x] Docker 설치 및 연결 상태 검증
+- [x] 컨테이너 정상 종료 확인
+
+### 상세 기록
+
+[hello-world 컨테이너 실행 로그 보기](docs/log/4_5.md)
 
 ---
 
