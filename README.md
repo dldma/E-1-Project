@@ -95,15 +95,15 @@ docker info
 ### Git 및 GitHub
 
 - [x] Git 사용자 정보 설정
-- [ ] Git 기본 브랜치 설정 확인
+- [x] Git 기본 브랜치 설정 확인
 - [x] GitHub 저장소 생성
 - [x] 로컬 저장소 Clone
 - [x] VS Code와 WSL 저장소 연결
 - [x] 원격 저장소 연결
 - [x] Commit 및 Push 수행
-- [ ] `git config --list` 결과 기록
-- [ ] GitHub 연동 증거 스크린샷 첨부
-- [ ] 민감정보 최종 점검
+- [x] `git config --list` 결과 기록
+- [x] GitHub 연동 증거 스크린샷 첨부
+- [x] 민감정보 최종 점검
 
 ---
 
@@ -1005,7 +1005,7 @@ Docker 볼륨 유지
 
 ## 4.11 Git 설정 및 GitHub 연동
 
-Git 사용자 정보를 설정하고 GitHub 원격 저장소와 연결하였다.
+Git 사용자 정보와 기본 브랜치를 설정하고, 로컬 저장소가 GitHub 원격 저장소와 정상적으로 연결되어 있는지 확인하였다.
 
 ### Git 설정 확인
 
@@ -1016,8 +1016,43 @@ git config --list
 실행 결과:
 
 ```text
-작성 예정
+user.name=이은지
+user.email=dldmswl******@naver.com
+init.defaultbranch=main
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+remote.origin.url=https://github.com/dldma/E-1-Project.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.main.remote=origin
+branch.main.merge=refs/heads/main
+branch.main.vscode-merge-base=origin/main
 ```
+
+Git 사용자 이름과 이메일이 설정되어 있으며, 새로운 저장소의 기본 브랜치가 `main`으로 지정되어 있음을 확인하였다.
+
+공개 문서에는 개인 이메일 주소 전체가 노출되지 않도록 일부 문자를 가려서 기록하였다.
+
+### Git 기본 브랜치 확인
+
+```bash
+git config --global init.defaultBranch
+```
+
+실행 결과:
+
+```text
+main
+```
+
+처음 확인했을 때는 결과가 출력되지 않아 다음 명령어로 기본 브랜치를 설정하였다.
+
+```bash
+git config --global init.defaultBranch main
+```
+
+설정 후 다시 확인한 결과 기본 브랜치가 `main`으로 정상적으로 지정되었다.
 
 ### 원격 저장소 확인
 
@@ -1028,8 +1063,16 @@ git remote -v
 실행 결과:
 
 ```text
-작성 예정
+origin  https://github.com/dldma/E-1-Project.git (fetch)
+origin  https://github.com/dldma/E-1-Project.git (push)
 ```
+
+GitHub의 `E-1-Project` 저장소가 `origin`이라는 이름으로 연결되어 있다.
+
+- `fetch`: GitHub에서 변경 내용을 가져올 때 사용
+- `push`: 로컬 커밋을 GitHub에 업로드할 때 사용
+
+원격 저장소 주소에 GitHub 토큰이나 비밀번호가 포함되지 않은 것도 확인하였다.
 
 ### 현재 브랜치 확인
 
@@ -1043,13 +1086,104 @@ git branch --show-current
 main
 ```
 
+현재 작업 중인 로컬 브랜치는 `main`이다.
+
+### 최근 커밋 확인
+
+```bash
+git log -1 --oneline
+```
+
+확인 당시 실행 결과:
+
+```text
+48cb56b (HEAD -> main, origin/main, origin/HEAD) 4.9
+```
+
+`HEAD`, 로컬 `main`, 원격 `origin/main`이 동일한 커밋을 가리키고 있어 로컬 저장소와 GitHub 원격 저장소가 동기화된 상태임을 확인하였다.
+
+### 저장소 상태 확인
+
+```bash
+git status
+```
+
+실행 결과:
+
+```text
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+```
+
+현재 로컬 `main` 브랜치가 원격 `origin/main` 브랜치와 동일한 상태이며, 커밋하지 않은 변경 사항이 없는 것을 확인하였다.
+
 ### GitHub 연동 결과
 
-작성 예정
+원격 저장소의 최신 정보를 가져온 뒤 브랜치 상태를 확인하였다.
+
+```bash
+git fetch origin
+git status -sb
+```
+
+실행 결과:
+
+```text
+## main...origin/main
+```
+
+`git fetch origin`은 오류 없이 실행되었으며 새롭게 가져올 변경 사항이 없어 별도의 출력은 나타나지 않았다.
+
+`main...origin/main`이 표시되고 앞서거나 뒤처진 커밋 수가 나타나지 않았으므로 로컬 브랜치와 원격 브랜치가 동일한 상태이다.
 
 ### 연동 증거
 
-작성 예정
+#### 원격 저장소와 브랜치 확인
+
+![Git 원격 저장소와 브랜치 확인 화면](docs/screenshots/4_11.png)
+
+#### VS Code 저장소 상태 확인
+
+![VS Code Git 저장소 상태 확인 화면](docs/screenshots/4_11_2.png)
+
+스크린샷을 통해 다음 내용을 확인하였다.
+
+```text
+GitHub 원격 저장소 주소
+fetch 및 push 연결
+현재 브랜치 main
+최근 커밋
+origin/main 동기화 상태
+working tree clean 상태
+```
+
+### 민감정보 점검
+
+- [x] GitHub 토큰 미포함
+- [x] 비밀번호 미포함
+- [x] 인증 정보가 포함된 원격 저장소 주소 미사용
+- [x] 공개 문서에서 개인 이메일 일부 가림
+- [x] 스크린샷에 토큰 및 비밀번호 미포함
+
+### 수행 결과
+
+- [x] Git 사용자 이름 설정 확인
+- [x] Git 사용자 이메일 설정 확인
+- [x] Git 기본 브랜치를 `main`으로 설정
+- [x] GitHub 원격 저장소 연결 확인
+- [x] fetch 및 push 주소 확인
+- [x] 현재 브랜치 `main` 확인
+- [x] 최근 커밋 확인
+- [x] 로컬 및 원격 브랜치 동기화 확인
+- [x] 작업 트리 상태 확인
+- [x] GitHub 연동 증거 첨부
+- [x] 민감정보 최종 점검
+
+### 상세 기록
+
+[Git 설정 및 GitHub 연동 로그 보기](docs/log/4_11.md)
 
 ---
 
