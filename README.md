@@ -89,8 +89,8 @@ docker info
 - [x] 브라우저 접속 확인
 - [x] `curl` 응답 확인
 - [ ] 바인드 마운트 변경 반영 확인
-- [ ] Docker 볼륨 생성
-- [ ] Docker 볼륨 영속성 검증
+- [x] Docker 볼륨 생성
+- [x] Docker 볼륨 영속성 검증
 
 ### Git 및 GitHub
 
@@ -788,41 +788,119 @@ Chrome GET / HTTP/1.1 → 304
 
 ## 4.10 Docker 볼륨 영속성
 
-Docker 볼륨을 생성하고 컨테이너에 연결한다.
-
-컨테이너를 삭제한 후 새로운 컨테이너에서 동일한 데이터를 확인하여 데이터가 유지되는지 검증한다.
+Docker 볼륨에 데이터를 저장한 뒤 기존 컨테이너를 삭제하고, 새로운 컨테이너에서 동일한 데이터를 확인하여 볼륨의 영속성을 검증하였다.
 
 ### 볼륨 생성 명령어
 
 ```bash
-작성 예정
+docker volume create e1-data-volume
 ```
 
-### 볼륨 연결 명령어
+생성된 볼륨을 확인하였다.
 
 ```bash
-작성 예정
+docker volume ls
 ```
 
-### 데이터 생성 결과
+```text
+DRIVER    VOLUME NAME
+local     e1-data-volume
+```
 
-작성 예정
+### 볼륨 연결 및 데이터 저장
 
-### 기존 컨테이너 삭제 결과
+`ubuntu:24.04` 컨테이너의 `/data` 디렉토리에 `e1-data-volume`을 연결하였다.
 
-작성 예정
+```bash
+docker run --name volume-test-1 \
+  -v e1-data-volume:/data \
+  ubuntu:24.04 \
+  bash -c 'echo "Docker volume data persists" > /data/persistence.txt && cat /data/persistence.txt'
+```
+
+실행 결과는 다음과 같다.
+
+```text
+Docker volume data persists
+```
+
+### 기존 컨테이너 삭제
+
+첫 번째 컨테이너의 상태가 `Exited (0)`인 것을 확인한 뒤 컨테이너를 삭제하였다.
+
+```bash
+docker rm volume-test-1
+```
+
+```text
+volume-test-1
+```
+
+컨테이너 삭제 후에도 볼륨은 유지되었다.
+
+```bash
+docker volume ls
+```
+
+```text
+DRIVER    VOLUME NAME
+local     e1-data-volume
+```
 
 ### 새로운 컨테이너에서 데이터 확인
 
-작성 예정
+새로운 컨테이너에 기존 볼륨을 다시 연결하고 저장된 파일을 확인하였다.
 
-### 검증 결과
+```bash
+docker run --rm --name volume-test-2 \
+  -v e1-data-volume:/data \
+  ubuntu:24.04 \
+  cat /data/persistence.txt
+```
 
-작성 예정
+실행 결과는 다음과 같다.
+
+```text
+Docker volume data persists
+```
+
+첫 번째 컨테이너를 삭제한 이후에도 새로운 컨테이너에서 기존 파일을 확인할 수 있었다.
+
+이를 통해 데이터가 컨테이너가 아닌 Docker 볼륨에 저장되어 유지된다는 것을 검증하였다.
+
+### 영속성 검증 결과
+
+```text
+첫 번째 컨테이너에서 파일 생성
+        ↓
+첫 번째 컨테이너 삭제
+        ↓
+Docker 볼륨 유지
+        ↓
+새로운 컨테이너에 같은 볼륨 연결
+        ↓
+기존 파일 내용 확인 성공
+```
+
+### 수행 결과
+
+- [x] Docker 볼륨 생성
+- [x] Docker 볼륨 목록 확인
+- [x] 컨테이너에 볼륨 연결
+- [x] 볼륨에 데이터 저장
+- [x] 기존 컨테이너 삭제
+- [x] 컨테이너 삭제 후 볼륨 유지 확인
+- [x] 새로운 컨테이너에 기존 볼륨 연결
+- [x] 기존 데이터 확인
+- [x] Docker 볼륨 영속성 검증
+
+### 상세 기록
+
+[Docker 볼륨 영속성 로그 보기](docs/log/4_10.md)
 
 ---
 
-## 4.1 Git 설정 및 GitHub 연동
+## 4.11 Git 설정 및 GitHub 연동
 
 Git 사용자 정보를 설정하고 GitHub 원격 저장소와 연결하였다.
 
