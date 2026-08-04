@@ -76,8 +76,8 @@ docker info
 - [x] 컨테이너 로그 확인
 - [x] 컨테이너 리소스 사용량 확인
 - [x] `hello-world` 컨테이너 실행
-- [ ] Ubuntu 컨테이너 실행 및 내부 진입
-- [ ] `attach`와 `exec` 차이 확인
+- [x] Ubuntu 컨테이너 실행 및 내부 진입
+- [x] `attach`와 `exec` 차이 확인
 
 ### Dockerfile 및 웹 서버
 
@@ -394,17 +394,19 @@ hello-world 컨테이너 생성
 
 ---
 
-## 4.6 Ubuntu 컨테이너 실행
+## 4.6 Ubuntu 컨테이너 실행 및 내부 진입
 
-Ubuntu 컨테이너를 대화형 모드로 실행하고 컨테이너 내부에서 Linux 명령어를 실행한다.
+`ubuntu:24.04` 이미지로 대화형 컨테이너를 생성하고 Bash 터미널에 직접 진입하였다.
 
-### 실행 명령어
+컨테이너 내부에서 기본 Linux 명령어와 운영체제 정보를 확인하고, `docker attach`와 `docker exec`를 사용하여 실행 중인 컨테이너에 접속하였다.
+
+### 컨테이너 생성 및 내부 진입
 
 ```bash
-docker run -it --name ubuntu-practice ubuntu bash
+docker run -it --name ubuntu-shell ubuntu:24.04 bash
 ```
 
-컨테이너 내부에서 실행할 명령어:
+컨테이너 내부에서 다음 명령어를 실행하였다.
 
 ```bash
 pwd
@@ -415,11 +417,101 @@ cat /etc/os-release
 
 ### 실행 결과
 
-작성 예정
+```text
+컨테이너 이름: ubuntu-shell
+컨테이너 ID: 9391942d87da
+사용 이미지: ubuntu:24.04
+컨테이너 내부 경로: /
+운영체제: Ubuntu 24.04.4 LTS
+```
 
-### `run`, `start`, `attach`, `exec` 차이
+컨테이너 내부에서 `exit`를 실행한 뒤 `docker ps -a`로 `Exited (0)` 상태를 확인하였다.
 
-작성 예정
+### docker attach 실습
+
+```bash
+docker start ubuntu-shell
+docker attach --detach-keys="x" ubuntu-shell
+```
+
+`docker attach`를 사용하여 실행 중인 컨테이너의 기존 주 터미널에 연결하였다.
+
+VS Code 터미널에서 기본 분리 키가 동작하지 않아 `--detach-keys="x"` 옵션을 사용하여 소문자 `x`를 분리 키로 지정하였다.
+
+```text
+Attached to container
+read escape sequence
+```
+
+분리 후 `docker ps`를 실행한 결과 컨테이너가 계속 `Up` 상태로 실행되는 것을 확인하였다.
+
+### docker exec 실습
+
+```bash
+docker exec -it ubuntu-shell bash
+```
+
+컨테이너 내부에서 다음 명령어를 실행하였다.
+
+```bash
+echo "Entered with docker exec"
+pwd
+exit
+```
+
+실행 결과는 다음과 같다.
+
+```text
+Entered with docker exec
+/
+```
+
+`docker exec`로 실행한 Bash에서 `exit`를 입력해도 원래 컨테이너는 계속 `Up` 상태로 실행되는 것을 확인하였다.
+
+### 중지 상태에서 exec 실행
+
+중지된 컨테이너에서 `docker exec`를 실행했을 때 다음 오류가 발생하였다.
+
+```text
+Error response from daemon: container ... is not running
+```
+
+`docker exec`는 실행 중인 컨테이너에서만 사용할 수 있으므로 다음과 같이 컨테이너를 먼저 시작하여 해결하였다.
+
+```bash
+docker start ubuntu-shell
+docker exec -it ubuntu-shell bash
+```
+
+### attach와 exec 차이
+
+| 명령어 | 설명 |
+|---|---|
+| `docker attach` | 실행 중인 컨테이너의 기존 주 터미널에 연결 |
+| `docker exec` | 실행 중인 컨테이너 내부에서 새로운 명령어나 셸을 실행 |
+
+`attach` 상태에서 `exit`를 입력하면 컨테이너의 주 프로세스가 종료되어 컨테이너도 중지될 수 있다.
+
+반면 `exec`로 실행한 Bash에서 `exit`를 입력하면 추가로 실행한 Bash만 종료되며 원래 컨테이너는 계속 실행된다.
+
+### 수행 결과
+
+- [x] Ubuntu 컨테이너 생성 및 실행
+- [x] 컨테이너 내부 Bash 진입
+- [x] 컨테이너 내부 Linux 명령어 실행
+- [x] Ubuntu 버전 확인
+- [x] 중지된 컨테이너 재실행
+- [x] `docker attach`로 기존 터미널 연결
+- [x] 컨테이너를 중지하지 않고 attach 연결 종료
+- [x] `docker exec`로 새로운 Bash 실행
+- [x] exec 종료 후 컨테이너 실행 상태 확인
+- [x] 중지 상태에서 exec 실행 오류 확인 및 해결
+- [x] `attach`와 `exec` 차이 확인
+- [x] 실습 종료 후 컨테이너 중지
+
+### 상세 기록
+
+[Ubuntu 컨테이너 실행 및 내부 진입 로그 보기](docs/log/4_6.md)
 
 ---
 
