@@ -88,7 +88,7 @@ docker info
 - [x] 포트 매핑 적용
 - [x] 브라우저 접속 확인
 - [x] `curl` 응답 확인
-- [ ] 바인드 마운트 변경 반영 확인
+- [x] 바인드 마운트 변경 반영 확인
 - [x] Docker 볼륨 생성
 - [x] Docker 볼륨 영속성 검증
 
@@ -760,29 +760,132 @@ Chrome GET / HTTP/1.1 → 304
 
 ## 4.9 바인드 마운트
 
-호스트의 파일을 컨테이너 내부 경로와 연결하고, 호스트 파일 변경이 컨테이너에 즉시 반영되는지 확인한다.
+호스트의 HTML 파일을 NGINX 컨테이너 내부 웹 문서 경로와 연결하였다.
+
+호스트 파일을 수정한 뒤 컨테이너를 다시 빌드하거나 재시작하지 않아도 웹페이지에 변경 내용이 즉시 반영되는지 확인하였다.
 
 ### 실행 명령어
 
 ```bash
-작성 예정
+cd ~/codyssey/E-1-Project
+mkdir -p bind-mount/html
+cp app/index.html bind-mount/html/index.html
+
+docker run -d \
+  --name e1-bind-container \
+  -p 127.0.0.1:8081:80 \
+  -v "$(pwd)/bind-mount/html:/usr/share/nginx/html:ro" \
+  nginx:alpine
+```
+
+### 바인드 마운트 설정
+
+```text
+호스트 경로:
+bind-mount/html
+
+컨테이너 경로:
+/usr/share/nginx/html
+
+마운트 모드:
+읽기 전용(ro)
+
+호스트 포트:
+8081
+
+컨테이너 포트:
+80
 ```
 
 ### 변경 전 결과
 
-작성 예정
+```bash
+curl http://localhost:8081
+```
+
+변경 전 웹페이지에는 다음 내용이 표시되었다.
+
+```text
+Docker Web Server
+Dockerfile로 만든 NGINX 커스텀 이미지입니다.
+E-1 개발 환경 구축 프로젝트
+```
+
+#### 변경 전 화면
+
+![바인드 마운트 변경 전 화면](docs/screenshots/4_9.png)
 
 ### 호스트 파일 수정 내용
 
-작성 예정
+호스트의 `bind-mount/html/index.html` 파일을 다음과 같이 수정하였다.
+
+```html
+<h1>Bind Mount Web Server</h1>
+<p>호스트 파일 변경 내용이 컨테이너에 반영되었습니다.</p>
+<p>E-1 바인드 마운트 실습</p>
+```
 
 ### 변경 후 결과
 
-작성 예정
+컨테이너를 다시 빌드하거나 재시작하지 않고 다음 명령어를 실행하였다.
+
+```bash
+curl http://localhost:8081
+```
+
+변경 후 웹페이지에는 다음 내용이 표시되었다.
+
+```text
+Bind Mount Web Server
+호스트 파일 변경 내용이 컨테이너에 반영되었습니다.
+E-1 바인드 마운트 실습
+```
+
+#### 변경 후 화면
+
+![바인드 마운트 변경 후 화면](docs/screenshots/4_9_2.png)
+
+### 컨테이너 내부 파일 확인
+
+```bash
+docker exec e1-bind-container cat /usr/share/nginx/html/index.html
+```
+
+컨테이너 내부에서도 수정된 HTML 내용이 확인되었다.
+
+### 마운트 설정 확인
+
+```bash
+docker inspect e1-bind-container --format='{{json .Mounts}}'
+```
+
+확인 결과는 다음과 같다.
+
+```text
+Type: bind
+Source: /home/dldmswl/codyssey/E-1-Project/bind-mount/html
+Destination: /usr/share/nginx/html
+Mode: ro
+RW: false
+```
+
+`RW:false`는 컨테이너에서 마운트된 호스트 경로를 읽기만 할 수 있음을 의미한다.
 
 ### 검증 결과
 
-작성 예정
+- [x] 호스트 디렉토리와 컨테이너 경로 연결
+- [x] 바인드 마운트 컨테이너 실행
+- [x] 변경 전 웹페이지 확인
+- [x] 호스트 HTML 파일 수정
+- [x] 컨테이너 재시작 없이 변경 내용 확인
+- [x] 브라우저 변경 전후 화면 확인
+- [x] 컨테이너 내부 파일 변경 확인
+- [x] 바인드 마운트 설정 확인
+- [x] 읽기 전용 연결 확인
+
+### 상세 기록
+
+[바인드 마운트 실습 로그 보기](docs/log/4_9.md)
 
 ---
 
